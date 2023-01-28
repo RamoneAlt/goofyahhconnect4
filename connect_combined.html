@@ -5,10 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Eamon'sConnect4</title>
-    <link rel="stylesheet" href="connect4.css">
-    <script src="connect4.js"></script>
+
 <style> 
-  body {
+	body {
         font-size: 24px;
     text-shadow: grey -2.75px 2.75px;
     font-family:Ranade,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
@@ -35,31 +34,23 @@
     height: 70px;
     width: 70px;
     margin: 5px;
-
-  
     background-color: white;
-    
     border-radius: 50%;
     border: 5px solid navy; 
 }
 
 .red-piece {
     background-color: #de0404;
-    
-   
 }
 
 .yellow-piece {
     background-color: #e8e805;
 }
-
 h1 {
   text-shadow: grey 2px 2px;
 }
-
-
 .mover {
-  animation: moverchange 10.9s ease-in-out infinite;
+  animation: moverchange 2.9s ease-in-out infinite;
   width: 25px;
   height: 25px;
   border: solid 4px #ad0303;
@@ -75,73 +66,30 @@ h1 {
 @keyframes moverchange {
   0% {
     transform: scale(1);
-   
   }
   50% {
     transform: scale(1.25);
-  
   }
   100% {
     transform: scale(1);
   }
 }
+	
+	</style>
 
-
-
-
-
-
-
-.title-animated {
-  animation: expand-contract 35s ease-in-out infinite;
-}
-
-@keyframes expand-contract {
-  0% {
-    transform: scale(1);
-    letter-spacing: 4px;
-    color: #313438;
-    transform: rotate(0deg);
-  }
-  
-   25% {
-    transform: scale(1.02);
-    letter-spacing: 7px;
-    color: #313438;
-    transform: rotate(-2deg);
-  }
-  50% {
-    transform: scale(1.05);
-    letter-spacing: 12px;
-    color: #202121;
-    transform: rotate(0deg);
-  }
-     75% {
-    transform: scale(1.02);
-    letter-spacing: 7px;
-    color: #313438;
-    transform: rotate(2deg);
-  }
-  100% {
-    transform: scale(1);
-    letter-spacing: 4px;
-    color: #313438;
-    transform: rotate(0deg);
-  }
-}
-  </style>
 
 </head>
 <body>
 <div class="mover"></div>
    
-<div class="title-animate"> Eamon's Connect Four!</div>
+<h1> Eamon's Connect Four!</h1>
     <h2 id="winner"></h2>
     <div id="board"></div>
 </body>
 
-<script>
-  var playerRed = "R";
+<script> 
+	
+	var playerRed = "R";
 var playerYellow = "Y";
 var currPlayer = playerRed;
 
@@ -283,8 +231,6 @@ function checkWinner() {
 }
 
 function setWinner(r, c) {
-  
- 
 
     if (board[r][c] == playerRed) {
         winner.innerHTML = "<span style='color: #de0404; font-size: 30px; letter-spacing: 2px; text-shadow: #9c0303 2px 2px;'> RED WINS!</span>";           
@@ -293,7 +239,6 @@ function setWinner(r, c) {
     }
     gameOver = true;
 
-
 }
 
 let goofy = document.documentElement;
@@ -301,7 +246,6 @@ goofy.addEventListener("mousemove", e => {
   goofy.style.setProperty('--mouse-x', e.clientX + "px");
   goofy.style.setProperty('--mouse-y', e.clientY + "px");
 });
-  </script>
-
-
+	
+	</script>
 </html>
