@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Eamon'sConnect4</title>
+    <link rel="stylesheet" href="connect4.css">
+    <script src="connect4.js"></script>
+<style> 
+  body {
+        font-size: 24px;
+    text-shadow: grey -2.75px 2.75px;
+    font-family:Ranade,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+    font-weight: bold;
+    letter-spacing: 17px;
+    text-align: center;
+    filter: drop-shadow(0.7rem 0.2rem 1rem #637dba);
+    background-color: #9db1d1;
+    }
+
+#board {
+    height: 540px;
+    width: 630px;
+    background-color: #5d51c2;
+    border: 10px solid #151047;
+    border-radius: 3%;
+   
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tile {
+    height: 70px;
+    width: 70px;
+    margin: 5px;
+
+  
+    background-color: white;
+    
+    border-radius: 50%;
+    border: 5px solid navy; 
+}
+
+.red-piece {
+    background-color: #de0404;
+    
+   
+}
+
+.yellow-piece {
+    background-color: #e8e805;
+}
+
+h1 {
+  text-shadow: grey 2px 2px;
+}
+
+
+.mover {
+  animation: moverchange 2.9s ease-in-out infinite;
+  width: 25px;
+  height: 25px;
+  border: solid 4px #ad0303;
+  background-color: red;
+  border-radius: 50%;
+  box-shadow: 4px 4px rgba(0, 0, 0, 0.31);
+  position: absolute;
+  left: var(--mouse-x);
+  top: var(--mouse-y);
+  z-index: 1;
+}
+
+@keyframes moverchange {
+  0% {
+    transform: scale(1);
+   
+  }
+  50% {
+    transform: scale(1.25);
+  
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+
+
+
+
+
+.title-animated {
+  animation: expand-contract 35s ease-in-out infinite;
+}
+
+@keyframes expand-contract {
+  0% {
+    transform: scale(1);
+    letter-spacing: 4px;
+    color: #313438;
+    transform: rotate(0deg);
+  }
+  
+   25% {
+    transform: scale(1.02);
+    letter-spacing: 7px;
+    color: #313438;
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: scale(1.05);
+    letter-spacing: 12px;
+    color: #202121;
+    transform: rotate(0deg);
+  }
+     75% {
+    transform: scale(1.02);
+    letter-spacing: 7px;
+    color: #313438;
+    transform: rotate(2deg);
+  }
+  100% {
+    transform: scale(1);
+    letter-spacing: 4px;
+    color: #313438;
+    transform: rotate(0deg);
+  }
+}
+  </style>
+
+</head>
+<body>
+<div class="mover"></div>
+   
+<div class="title-animate"> Eamon's Connect Four!</div>
+    <h2 id="winner"></h2>
+    <div id="board"></div>
+</body>
+
+<script>
+  var playerRed = "R";
+var playerYellow = "Y";
+var currPlayer = playerRed;
+
+var gameOver = false;
+var board;
+
+var rows = 6;
+var columns = 7;
+var currColumns = []; //keeps track of which row each column is at.
+
+
+window.onload = function() {
+    setGame();
+}
+
+
+
+function setGame() {
+    board = [];
+    currColumns = [5, 5, 5, 5, 5, 5, 5];
+
+    for (let r = 0; r < rows; r++) {
+        let row = [];
+        for (let c = 0; c < columns; c++) {
+            // JS
+            row.push(' ');
+            // HTML
+            let tile = document.createElement("div");
+            tile.id = r.toString() + "-" + c.toString();
+            tile.classList.add("tile");
+            tile.addEventListener("click", setPiece);
+            document.getElementById("board").append(tile);
+           			
+									 let mover = document.createElement("div");
+                   mover.classList.add("mover");
+                   
+        }
+        board.push(row);
+    }
+}
+
+function setPiece() {
+    if (gameOver) {
+        return;
+    }
+
+    //get coords of that tile clicked
+    let coords = this.id.split("-");
+    let r = parseInt(coords[0]);
+    let c = parseInt(coords[1]);
+
+    // figure out which row the current column should be on
+    r = currColumns[c]; 
+
+    if (r < 0) { // board[r][c] != ' '
+        return;
+    }
+
+    board[r][c] = currPlayer; //update JS board
+    let tile = document.getElementById(r.toString() + "-" + c.toString());
+    if (currPlayer == playerRed) {
+			
+        tile.classList.add("red-piece");
+        currPlayer = playerYellow;
+    }
+    else {
+        tile.classList.add("yellow-piece");
+        currPlayer = playerRed;
+    }
+
+    r -= 1; //update the row height for that column
+    currColumns[c] = r; //update the array
+
+    checkWinner();
+
+var elements = document.getElementsByClassName("mover");
+for(var i = 0; i < elements.length; i++) {
+    if (currPlayer === playerRed) {
+        elements[i].style.backgroundColor = "red";
+        elements[i].style.borderColor = "#ad0303";
+    } else if (currPlayer === playerYellow) {
+        elements[i].style.backgroundColor = "yellow";
+        elements[i].style.borderColor = "orange";
+    }
+}
+
+
+
+}
+
+function checkWinner() {
+     // horizontal
+     for (let r = 0; r < rows; r++) {
+         for (let c = 0; c < columns - 3; c++){
+            if (board[r][c] != ' ') {
+                if (board[r][c] == board[r][c+1] && board[r][c+1] == board[r][c+2] && board[r][c+2] == board[r][c+3]) {
+                    setWinner(r, c);
+                    return;
+                }
+            }
+         }
+    }
+
+    // vertical
+    for (let c = 0; c < columns; c++) {
+        for (let r = 0; r < rows - 3; r++) {
+            if (board[r][c] != ' ') {
+                if (board[r][c] == board[r+1][c] && board[r+1][c] == board[r+2][c] && board[r+2][c] == board[r+3][c]) {
+                    setWinner(r, c);
+                    return;
+                }
+            }
+        }
+    }
+
+    // anti diagonal
+    for (let r = 0; r < rows - 3; r++) {
+        for (let c = 0; c < columns - 3; c++) {
+            if (board[r][c] != ' ') {
+                if (board[r][c] == board[r+1][c+1] && board[r+1][c+1] == board[r+2][c+2] && board[r+2][c+2] == board[r+3][c+3]) {
+                    setWinner(r, c);
+                    return;
+                }
+            }
+        }
+    }
+
+    // diagonal
+    for (let r = 3; r < rows; r++) {
+        for (let c = 0; c < columns - 3; c++) {
+            if (board[r][c] != ' ') {
+                if (board[r][c] == board[r-1][c+1] && board[r-1][c+1] == board[r-2][c+2] && board[r-2][c+2] == board[r-3][c+3]) {
+                    setWinner(r, c);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+function setWinner(r, c) {
+  
+ 
+
+    if (board[r][c] == playerRed) {
+        winner.innerHTML = "<span style='color: #de0404; font-size: 30px; letter-spacing: 2px; text-shadow: #9c0303 2px 2px;'> RED WINS!</span>";           
+    } else {
+        winner.innerHTML = "<span style='color: #e8e805; font-size: 30px; letter-spacing: 2px; text-shadow: #b5b504 2px 2px;'> YELLOW WINS!</span>"; 
+    }
+    gameOver = true;
+
+
+}
+
+let goofy = document.documentElement;
+goofy.addEventListener("mousemove", e => {
+  goofy.style.setProperty('--mouse-x', e.clientX + "px");
+  goofy.style.setProperty('--mouse-y', e.clientY + "px");
+});
+  </script>
+
+
+</html>
